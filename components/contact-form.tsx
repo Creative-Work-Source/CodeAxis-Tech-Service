@@ -1,51 +1,78 @@
 "use client";
 
 import { useState } from "react";
-import { Loader2, Send } from "lucide-react";
+import { Send } from "lucide-react";
+import { siteInfo } from "@/data/portfolio";
 
 export function ContactForm() {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [purpose, setPurpose] = useState("");
-  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState("");
 
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setStatus("loading");
     setErrorMessage("");
 
-    try {
-      const res = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ fullName, email, phone, purpose }),
-      });
-      const data = (await res.json()) as { error?: string };
+    const name = fullName.trim();
+    const addr = email.trim();
+    const phoneTrim = phone.trim();
+    const msg = purpose.trim();
 
-      if (!res.ok) {
-        setErrorMessage(data.error ?? "Something went wrong.");
-        setStatus("error");
-        return;
-      }
-
-      setStatus("success");
-      setFullName("");
-      setEmail("");
-      setPhone("");
-      setPurpose("");
-    } catch {
-      setErrorMessage("Network error. Check your connection and try again.");
+    if (name.length < 2) {
+      setErrorMessage("Please enter your full name.");
       setStatus("error");
+      return;
     }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(addr)) {
+      setErrorMessage("Please enter a valid email address.");
+      setStatus("error");
+      return;
+    }
+    if (msg.length < 10) {
+      setErrorMessage("Please describe your contact purpose in a bit more detail (at least 10 characters).");
+      setStatus("error");
+      return;
+    }
+
+    const subject = `Portfolio contact: ${name}`;
+    const body = [
+      `Name: ${name}`,
+      `Email: ${addr}`,
+      phoneTrim ? `Phone: ${phoneTrim}` : "Phone: (not provided)",
+      "",
+      "Message:",
+      msg,
+    ].join("\n");
+
+    const mailto = `mailto:${encodeURIComponent(siteInfo.email)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+    // Practical limit for mailto URLs in many clients/browsers
+    if (mailto.length > 1800) {
+      setErrorMessage(
+        "Your message is too long to open automatically. Please copy it and email me using the address in the footer.",
+      );
+      setStatus("error");
+      return;
+    }
+
+    window.location.href = mailto;
+    setStatus("success");
+    setFullName("");
+    setEmail("");
+    setPhone("");
+    setPurpose("");
   }
 
   if (status === "success") {
     return (
       <div className="rounded-[1.5rem] border border-emerald-400/25 bg-emerald-500/10 px-6 py-10 text-center">
-        <p className="text-lg font-semibold text-emerald-100">Message sent</p>
-        <p className="mt-2 text-sm leading-6 text-emerald-200/80">Thanks for reaching out. I’ll get back to you as soon as I can.</p>
+        <p className="text-lg font-semibold text-emerald-100">Ready to send</p>
+        <p className="mt-2 text-sm leading-6 text-emerald-200/80">
+          Your email app should open with the message filled in—press send there to deliver it. If nothing opened, use the email link in the site footer.
+        </p>
         <button
           type="button"
           onClick={() => setStatus("idle")}
@@ -133,20 +160,10 @@ export function ContactForm() {
 
       <button
         type="submit"
-        disabled={status === "loading"}
-        className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-cyan-400 to-sky-500 px-6 py-3.5 text-sm font-semibold text-slate-950 shadow-[0_10px_30px_rgba(56,189,248,0.35)] transition hover:-translate-y-0.5 hover:shadow-[0_18px_40px_rgba(56,189,248,0.45)] disabled:translate-y-0 disabled:opacity-60 disabled:shadow-none sm:w-auto"
+        className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-cyan-400 to-sky-500 px-6 py-3.5 text-sm font-semibold text-slate-950 shadow-[0_10px_30px_rgba(56,189,248,0.35)] transition hover:-translate-y-0.5 hover:shadow-[0_18px_40px_rgba(56,189,248,0.45)] sm:w-auto"
       >
-        {status === "loading" ? (
-          <>
-            <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
-            Sending…
-          </>
-        ) : (
-          <>
-            <Send className="h-4 w-4" aria-hidden />
-            Send message
-          </>
-        )}
+        <Send className="h-4 w-4" aria-hidden />
+        Open in email app
       </button>
     </form>
   );
