@@ -26,9 +26,12 @@ export default function HomePage() {
               <Link href="/projects" className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-cyan-400 to-sky-500 px-5 py-3 text-sm font-semibold text-slate-950 shadow-[0_10px_30px_rgba(56,189,248,0.35)] transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_18px_40px_rgba(56,189,248,0.45)]">
                 View Projects <ArrowRight className="h-4 w-4" />
               </Link>
-              <Link href="/contact" className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/6 px-5 py-3 text-sm font-medium text-white transition duration-300 hover:-translate-y-0.5 hover:border-white/30 hover:bg-white/10">
+              <a
+                href={`mailto:${siteInfo.email}`}
+                className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/6 px-5 py-3 text-sm font-medium text-white transition duration-300 hover:-translate-y-0.5 hover:border-white/30 hover:bg-white/10"
+              >
                 Contact Me
-              </Link>
+              </a>
             </div>
 
             <div className="mt-8 flex flex-wrap gap-5 text-sm text-slate-300">

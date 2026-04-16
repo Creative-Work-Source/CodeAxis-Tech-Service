@@ -8,7 +8,6 @@ const links = [
   { label: "Projects", href: "/projects" },
   { label: "Services", href: "/services" },
   { label: "Experience", href: "/experience" },
-  { label: "Contact", href: "/contact" },
 ];
 
 export function SiteHeader() {
@@ -16,6 +15,9 @@ export function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-white/10 bg-slate-950/60 backdrop-blur-2xl">
+      <p className="mx-auto max-w-6xl px-6 py-1.5 text-center text-[11px] leading-4 text-slate-200/90 md:px-8">
+        Feel Free To Contact Me Any Time! I Am Always Open To Discussion With You!
+      </p>
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4 md:px-8">
         <Link href="/" className="text-sm font-semibold uppercase tracking-[0.22em] text-white transition hover:text-cyan-200">
           {siteInfo.name}
