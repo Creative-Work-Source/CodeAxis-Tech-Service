@@ -1,113 +1,108 @@
 import Link from "next/link";
-import { ExternalLink } from "lucide-react";
 import { notFound } from "next/navigation";
-import { Footer } from "@/components/footer";
+import { ArrowLeft, ArrowRight, ExternalLink } from "lucide-react";
+import { Aurora } from "@/components/aurora";
+import { ProjectVisual } from "@/components/mockups";
+import { PageHero } from "@/components/page-hero";
 import { PageShell } from "@/components/page-shell";
+import { domainOf } from "@/components/project-card";
 import { projects } from "@/data/portfolio";
 
 export function generateStaticParams() {
   return projects.map((project) => ({ slug: project.slug }));
 }
 
-export default function ProjectDetailPage({ params }: { params: { slug: string } }) {
-  const project = projects.find((item) => item.slug === params.slug);
+export function generateMetadata({ params }: { params: { slug: string } }) {
+  const p = projects.find((x) => x.slug === params.slug);
+  return { title: p ? `${p.title} | CodeAxis` : "CodeAxis" };
+}
 
-  if (!project) notFound();
+export default function ProjectDetailPage({ params }: { params: { slug: string } }) {
+  const i = projects.findIndex((item) => item.slug === params.slug);
+  if (i === -1) notFound();
+  const project = projects[i];
+  const next = projects[(i + 1) % projects.length];
+  const story = [
+    { label: "01 · The problem", text: project.problem },
+    { label: "02 · Our solution", text: project.solution },
+    { label: "03 · Results", text: project.results },
+  ].filter((s): s is { label: string; text: string } => Boolean(s.text));
 
   return (
     <PageShell>
-      <section className="mx-auto max-w-6xl px-6 pb-16 pt-20 md:px-8 md:pt-28">
-        <div className="overflow-hidden rounded-[2rem] border border-white/10 bg-white/7 backdrop-blur-xl">
-          <div className="relative border-b border-white/10 px-8 py-14 md:px-12">
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(34,211,238,0.18),transparent_40%),radial-gradient(circle_at_bottom_right,rgba(168,85,247,0.12),transparent_35%)]" />
-            <div className="relative max-w-4xl">
-              <p className="text-sm uppercase tracking-[0.22em] text-cyan-200">Project Detail</p>
-              <h1 className="mt-4 text-4xl font-semibold tracking-tight text-white md:text-6xl">{project.title}</h1>
-              <p className="mt-5 max-w-2xl text-lg leading-8 text-slate-300">{project.summary}</p>
-              {project.website && (
-                <a
-                  href={project.website}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-cyan-200 transition hover:text-white"
-                >
-                  {project.website.replace(/^https?:\/\//, "")}
-                  <ExternalLink className="h-4 w-4" aria-hidden />
-                </a>
-              )}
+      <PageHero
+        eyebrow="Software case study"
+        title={project.title}
+        description={project.summary}
+        media={<ProjectVisual domain={domainOf(project.website)} index={i} className="aspect-[16/12] shadow-lift" />}
+      >
+        {project.website && (
+          <a href={project.website} target="_blank" rel="noopener noreferrer" className="btn-primary">
+            Visit {domainOf(project.website)} <ExternalLink className="h-4 w-4" />
+          </a>
+        )}
+        <Link href="/projects" className="btn-ghost">
+          <ArrowLeft className="h-4 w-4" /> All work
+        </Link>
+      </PageHero>
+
+      {/* Facts band: left to right */}
+      <section className="relative overflow-hidden border-y border-line bg-surface">
+        <Aurora className="opacity-40" />
+        <div className="wrap relative grid divide-y divide-line lg:grid-cols-3 lg:divide-x lg:divide-y-0">
+          <div className="py-8 lg:pr-10">
+            <p className="eyebrow">Stack</p>
+            <div className="mt-4 flex flex-wrap gap-2">
+              {project.stack.map((s) => (
+                <span key={s} className="chip !text-ink">
+                  {s}
+                </span>
+              ))}
             </div>
           </div>
-
-          <div className="grid gap-8 px-8 py-10 md:grid-cols-[1.5fr_0.9fr] md:px-12">
-            <div>
-              {project.website ? (
-                <a
-                  href={project.website}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group block overflow-hidden rounded-[1.5rem] border border-white/10 bg-slate-950/45 px-6 py-20 text-center text-slate-400 transition hover:border-cyan-300/25 hover:text-slate-200"
-                >
-                  <span className="inline-flex items-center gap-2 text-sm font-medium text-cyan-200/90 group-hover:text-cyan-100">
-                    Open live site <ExternalLink className="h-4 w-4" aria-hidden />
-                  </span>
-                  <span className="mt-2 block text-xs text-slate-500">Replace this block with a screenshot or product video when you have one.</span>
-                </a>
-              ) : (
-                <div className="rounded-[1.5rem] border border-white/10 bg-slate-950/45 px-6 py-20 text-center text-slate-400">
-                  Replace this with a real screenshot, product video, or animated mockup.
-                </div>
-              )}
-
-              {project.problem || project.solution || project.results ? (
-                <div className="mt-8 space-y-8">
-                  {project.problem && (
-                    <div className="rounded-[1.5rem] border border-white/10 bg-white/5 p-6">
-                      <h2 className="text-xl font-semibold text-white">Client &amp; the problem</h2>
-                      <p className="mt-4 leading-8 text-slate-300">{project.problem}</p>
-                    </div>
-                  )}
-                  {project.solution && (
-                    <div className="rounded-[1.5rem] border border-white/10 bg-white/5 p-6">
-                      <h2 className="text-xl font-semibold text-white">Solution</h2>
-                      <p className="mt-4 leading-8 text-slate-300">{project.solution}</p>
-                    </div>
-                  )}
-                  {project.results && (
-                    <div className="rounded-[1.5rem] border border-white/10 bg-white/5 p-6">
-                      <h2 className="text-xl font-semibold text-white">Results</h2>
-                      <p className="mt-4 leading-8 text-slate-300">{project.results}</p>
-                    </div>
-                  )}
-                </div>
-              ) : (
-                <div className="mt-8 rounded-[1.5rem] border border-white/10 bg-white/5 p-6">
-                  <h2 className="text-2xl font-semibold text-white">Overview</h2>
-                  <p className="mt-4 leading-8 text-slate-300">{project.description}</p>
-                </div>
-              )}
-            </div>
-
-            <aside className="space-y-6">
-              <div className="rounded-[1.5rem] border border-white/10 bg-white/5 p-6">
-                <h3 className="text-lg font-semibold text-white">Stack</h3>
-                <p className="mt-4 text-sm leading-7 text-slate-300">{project.stack.join(" · ")}</p>
-              </div>
-              <div className="rounded-[1.5rem] border border-white/10 bg-white/5 p-6">
-                <h3 className="text-lg font-semibold text-white">Impact</h3>
-                <p className="mt-4 text-sm leading-7 text-slate-300">{project.impact}</p>
-              </div>
-              <div className="rounded-[1.5rem] border border-white/10 bg-white/5 p-6">
-                <h3 className="text-lg font-semibold text-white">Role</h3>
-                <p className="mt-4 text-sm leading-7 text-slate-300">{project.role}</p>
-              </div>
-              <Link href="/projects" className="inline-flex rounded-full border border-white/15 bg-white/6 px-5 py-3 text-sm font-medium text-white transition hover:bg-white/10">
-                Back to projects
-              </Link>
-            </aside>
+          <div className="py-8 lg:px-10">
+            <p className="eyebrow">Impact</p>
+            <p className="mt-4 text-sm leading-7 text-ink">{project.impact}</p>
+          </div>
+          <div className="py-8 lg:pl-10">
+            <p className="eyebrow">Our role</p>
+            <p className="mt-4 text-sm leading-7 text-ink">{project.role}</p>
           </div>
         </div>
       </section>
-      <Footer />
+
+      {/* Story: stair-stepped columns */}
+      <section className="wrap py-24">
+        <div className="grid gap-6 lg:grid-cols-3">
+          {story.map((s, k) => (
+            <article
+              key={s.label}
+              data-reveal="up"
+              style={{ "--d": `${k * 140}ms` } as React.CSSProperties}
+              className={`card glow-border p-8 ${["", "lg:mt-14", "lg:mt-28"][k]}`}
+            >
+              <p className="text-gradient font-display text-sm font-extrabold uppercase tracking-[0.16em]">{s.label}</p>
+              <p className="mt-5 leading-8 text-muted">{s.text}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="wrap pb-24">
+        <Link
+          href={`/projects/${next.slug}`}
+          className="group relative flex flex-col justify-between gap-6 overflow-hidden rounded-[2rem] bg-gradient-to-r from-indigo-600 via-violet-600 to-fuchsia-600 p-10 text-white sm:flex-row sm:items-center"
+        >
+          <Aurora ribbon className="mix-blend-screen" />
+          <div className="relative">
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white/75">Next case study</p>
+            <p className="mt-2 text-2xl font-extrabold sm:text-3xl">{next.title}</p>
+          </div>
+          <span className="relative flex h-14 w-14 items-center justify-center rounded-full bg-white text-indigo-700 transition group-hover:translate-x-2">
+            <ArrowRight className="h-6 w-6" />
+          </span>
+        </Link>
+      </section>
     </PageShell>
   );
 }

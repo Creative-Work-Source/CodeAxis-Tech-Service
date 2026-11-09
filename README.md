@@ -1,19 +1,10 @@
-# Portfolio Site Pro
+# CodeAxis
 
-A multi-page portfolio starter built with Next.js, TypeScript, and Tailwind CSS.
-
-## Included
-
-- Separate pages for Projects, Services, Stack, Experience, and Contact
-- Dynamic project detail pages under `app/projects/[slug]`
-- Animated motion background using layered gradients, floating mesh lights, and a subtle noise texture
-- Reusable layout and page shell components
-- Tailwind-based styling with glassmorphism panels
-- `.gitignore`, `package.json`, and starter README included
+Website for **CodeAxis**, a software engineering and technology services company co-founded by Faizan Zafar (software & technology), David Nguyen (architecture, BIM & civil engineering) and Agustin W. Salas (design architecture & master planning). It covers both practices: services, software client work and case studies, and the architecture portfolio.
 
 ## Tech
 
-- Next.js 14
+- Next.js 14 (App Router)
 - React 18
 - TypeScript
 - Tailwind CSS
@@ -26,42 +17,38 @@ npm install
 npm run dev
 ```
 
-Then open `http://localhost:3000`
+Then open `http://localhost:3000`.
 
-## Project structure
+## Pages
 
-```text
-app/
-  page.tsx
-  projects/page.tsx
-  projects/[slug]/page.tsx
-  services/page.tsx
-  stack/page.tsx
-  experience/page.tsx
-  contact/page.tsx
-components/
-  animated-background.tsx
-  footer.tsx
-  page-hero.tsx
-  page-shell.tsx
-  project-card.tsx
-  site-header.tsx
-data/
-  portfolio.ts
-public/
-  noise.svg
-  resume.pdf
-```
+| Route | Content |
+| --- | --- |
+| `/` | Hero, stats, client wall, services, process, software and architecture highlights, leadership, CTA |
+| `/services` | Service lines and technology stack |
+| `/projects` | Live client platforms and case studies |
+| `/projects/[slug]` | Case study detail (problem, solution, results) |
+| `/architecture` | Architecture, BIM & civil disciplines and portfolio |
+| `/architecture/[slug]` | Architecture project detail with image gallery |
+| `/portfolio/agustin-salas` | Co-founder profile and selected prior work, credited as in his portfolio |
+| `/experience` | Company practice areas and case-study index |
+| `/contact` | Enquiry form (opens the visitor's mail client) |
 
-## Customize first
+## Editing content
 
-- `data/portfolio.ts`
-- `components/site-header.tsx`
-- `app/layout.tsx`
-- `public/resume.pdf`
+All copy lives in `data/portfolio.ts`:
 
-## Notes
+- `siteInfo`: company name, tagline, description
+- `founders`: leadership section
+- `clientLinks` / `featuredClients`: client work links and the home-page client wall
+- `projects`: case studies
+- `services`, `processSteps`, `stackGroups`, `experienceItems`
 
-The tabs in the header now route to separate pages instead of page anchors.
-Each project card links to a standalone dynamic detail page.
-Replace the placeholder content with your real projects, links, screenshots, and experience.
+Architecture content lives in `data/architecture.ts` (`disciplines`, `archProjects`); images are in `public/architecture/<slug>/NN.jpg`.
+
+## Contact form
+
+The form on `/contact` posts to `app/api/contact/route.ts`, which emails the enquiry via SMTP. Copy `.env.example` to `.env.local` and fill in the SMTP settings and `CONTACT_INBOX`. Until they are set, the form tells visitors the inbox is being set up.
+
+## Theme
+
+Light (day) mode is the default; the toggle in the header switches to night mode and remembers the choice. Colours are CSS variables in `app/globals.css`.

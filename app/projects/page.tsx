@@ -1,73 +1,71 @@
-import { Footer } from "@/components/footer";
-import { PageHero } from "@/components/page-hero";
-import { PageShell } from "@/components/page-shell";
-import { ProjectCard } from "@/components/project-card";
 import { ExternalLink } from "lucide-react";
-import { projects } from "@/data/portfolio";
+import { Aurora } from "@/components/aurora";
+import { ProjectVisual } from "@/components/mockups";
+import { PageHero, SectionHeading } from "@/components/page-hero";
+import { PageShell } from "@/components/page-shell";
+import { ProjectRow } from "@/components/project-card";
+import { clientLinks, projects, toLinkLabel } from "@/data/portfolio";
 
-const preworks = [
-  "https://localhomesmarket.com",
-  "https://Kiteworks.com",
-  "https://imgprep.com",
-  "https://insolebuddy.com",
-  "https://ppt-auto-fill-generator-1.onrender.com",
-  "https://www.bitvavo.com",
-  "https://www.reya.xyz",
-  "https://www.bentley.com",
-  "https://www.worcester-bosch.co.uk",
-  "https://www.mccann.com",
-  "https://www.twitch.tv/",
-  "https://www.netflix.com/",
-  "https://www.bbc.com/",
+export const metadata = { title: "Software work | CodeAxis" };
+
+const tileColors = [
+  "hover:from-indigo-500 hover:to-violet-500",
+  "hover:from-fuchsia-500 hover:to-rose-500",
+  "hover:from-cyan-500 hover:to-sky-500",
+  "hover:from-emerald-500 hover:to-teal-500",
+  "hover:from-amber-500 hover:to-orange-500",
 ];
-
-function toLinkLabel(href: string) {
-  try {
-    return new URL(href).hostname.replace(/^www\./, "");
-  } catch {
-    return href;
-  }
-}
 
 export default function ProjectsPage() {
   return (
     <PageShell>
       <PageHero
-        eyebrow="Projects"
-        title="Selected work with room to grow into full case studies."
-        description="Each project now lives on its own page, so you can expand your portfolio over time with deeper screenshots, architecture notes, and outcomes."
-      />
-      <section className="mx-auto max-w-6xl px-6 pb-20 md:px-8">
-        <div className="space-y-10">
-          <div className="rounded-[2rem] border border-white/10 bg-white/6 px-8 py-8 shadow-[0_10px_50px_rgba(15,23,42,0.25)] backdrop-blur-xl">
-            <h2 className="text-lg font-semibold text-white">Have a look at my work here</h2>
-            <div className="mt-4 flex flex-wrap gap-3">
-              {preworks.map((href) => {
-                const label = toLinkLabel(href);
-                return (
-                  <a
-                    key={href}
-                    href={href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/6 px-5 py-2 text-sm font-medium text-white transition hover:bg-white/10"
-                  >
-                    {label}
-                    <ExternalLink className="h-4 w-4" aria-hidden />
-                  </a>
-                );
-              })}
-            </div>
+        eyebrow="Software work"
+        title={
+          <>
+            Platforms we have <span className="text-gradient">engineered, shipped and scaled.</span>
+          </>
+        }
+        description="From global consumer brands to venture-backed startups: live client platforms, followed by in-depth case studies covering the problem, our approach, the stack and the results."
+        media={
+          <div className="relative h-[440px] sm:h-[500px]">
+            <ProjectVisual domain="bitvavo.com" index={0} className="absolute left-0 top-0 w-[82%] -rotate-2 shadow-lift" />
+            <ProjectVisual domain="onbuy.com" index={1} className="absolute bottom-0 right-0 w-[72%] rotate-2 animate-float shadow-lift" />
           </div>
+        }
+      />
 
-          <div className="grid gap-6 lg:grid-cols-2">
-            {projects.map((project) => (
-              <ProjectCard key={project.slug} project={project} />
+      <section className="relative overflow-hidden border-y border-line bg-surface py-20">
+        <Aurora className="opacity-40" />
+        <div className="wrap relative">
+          <SectionHeading eyebrow="Client platforms" title="Live sites we have delivered for." description="Open any of them in a new tab." />
+          <div className="mt-12 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+            {clientLinks.map((href, i) => (
+              <a
+                key={href}
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                data-reveal="zoom"
+                style={{ "--d": `${(i % 5) * 60}ms` } as React.CSSProperties}
+                className={`group flex items-center justify-between gap-2 rounded-2xl border border-line bg-gradient-to-br from-surface to-surface-2 px-5 py-5 transition duration-500 hover:-translate-y-1 hover:border-transparent hover:shadow-lift ${tileColors[i % tileColors.length]}`}
+              >
+                <span className="truncate font-display text-base font-bold text-ink transition group-hover:text-white">{toLinkLabel(href)}</span>
+                <ExternalLink className="h-4 w-4 shrink-0 text-faint transition group-hover:text-white" />
+              </a>
             ))}
           </div>
         </div>
       </section>
-      <Footer />
+
+      <section className="wrap py-24">
+        <SectionHeading eyebrow="Case studies" title="The problem, our approach, and what changed." />
+        <div className="mt-16 space-y-28">
+          {projects.map((p, i) => (
+            <ProjectRow key={p.slug} project={p} index={i} />
+          ))}
+        </div>
+      </section>
     </PageShell>
   );
 }
