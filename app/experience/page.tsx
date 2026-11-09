@@ -1,92 +1,113 @@
 import Link from "next/link";
-import { ArrowRight, Briefcase } from "lucide-react";
-import { Footer } from "@/components/footer";
-import { PageHero } from "@/components/page-hero";
+import { ArrowRight, Check } from "lucide-react";
+import { Aurora } from "@/components/aurora";
+import { FounderCard } from "@/components/founder-card";
+import { DashboardMock, ProjectVisual } from "@/components/mockups";
+import { PageHero, SectionHeading } from "@/components/page-hero";
 import { PageShell } from "@/components/page-shell";
-import { SectionTitle } from "@/components/section-title";
-import { experienceItems, experiencePageIntro, projects } from "@/data/portfolio";
+import { experienceItems, experiencePageIntro, founders, projects } from "@/data/portfolio";
+
+export const metadata = { title: "Company | CodeAxis" };
+
+const visuals = [
+  <DashboardMock key="sw" className="w-full" />,
+  // eslint-disable-next-line @next/next/no-img-element
+  <img key="arch" src="/agustin/acqua-towers/01.jpg" alt="" className="aspect-[4/3] w-full rounded-3xl object-cover shadow-lift" />,
+  <ProjectVisual key="web" domain="onbuy.com" index={3} className="aspect-[4/3] shadow-lift" />,
+];
 
 export default function ExperiencePage() {
   return (
     <PageShell>
       <PageHero
-        eyebrow="Experience"
-        title="Delivery track record, roles, and representative projects."
-        description="A concise view of how I work with teams—plus case studies that map real outcomes to stack and responsibilities."
-      />
+        eyebrow="Company"
+        title={
+          <>
+            Two practices, <span className="text-gradient">one accountable team.</span>
+          </>
+        }
+        description={experiencePageIntro}
+      >
+        <Link href="/contact" className="btn-primary">
+          Work with us <ArrowRight className="h-4 w-4" />
+        </Link>
+      </PageHero>
 
-      <section className="mx-auto max-w-6xl px-6 pb-12 md:px-8">
-        <div className="rounded-[2rem] border border-white/10 bg-white/6 p-8 shadow-[0_10px_50px_rgba(15,23,42,0.2)] backdrop-blur-xl md:p-10">
-          <p className="max-w-3xl text-lg leading-8 text-slate-300">{experiencePageIntro}</p>
-        </div>
-      </section>
-
-      <section className="mx-auto max-w-6xl px-6 pb-16 md:px-8">
-        <SectionTitle eyebrow="Roles" title="Where I’ve focused my energy over the years." />
-        <div className="mt-10 space-y-6">
-          {experienceItems.map((item) => (
-            <article
-              key={`${item.company}-${item.role}`}
-              className="rounded-[2rem] border border-white/10 bg-white/6 p-8 shadow-[0_10px_40px_rgba(15,23,42,0.18)] backdrop-blur-xl transition duration-300 hover:border-cyan-300/20 md:p-10"
-            >
-              <div className="flex flex-col justify-between gap-4 border-b border-white/10 pb-6 md:flex-row md:items-start">
-                <div className="flex gap-4">
-                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-cyan-300/20 bg-cyan-400/10 text-cyan-200">
-                    <Briefcase className="h-5 w-5" aria-hidden />
-                  </div>
-                  <div>
-                    <h2 className="text-xl font-semibold text-white md:text-2xl">{item.role}</h2>
-                    <p className="mt-1 text-slate-300">{item.company}</p>
-                  </div>
-                </div>
-                <p className="shrink-0 text-sm font-medium uppercase tracking-[0.14em] text-slate-500 md:text-right">{item.period}</p>
+      {/* Practice areas: zigzag */}
+      <section className="wrap space-y-24 py-20">
+        {experienceItems.map((item, i) => {
+          const flip = i % 2 === 1;
+          return (
+            <article key={item.role} className="grid items-center gap-10 lg:grid-cols-2 lg:gap-20">
+              <div data-reveal={flip ? "right" : "left"} className={flip ? "lg:order-2" : ""}>
+                {visuals[i % visuals.length]}
               </div>
-              <p className="mt-6 text-base leading-7 text-slate-400">{item.summary}</p>
-              <ul className="mt-6 space-y-3 text-sm leading-7 text-slate-300">
-                {item.highlights.map((highlight) => (
-                  <li key={highlight} className="flex gap-3">
-                    <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-cyan-400/80" aria-hidden />
-                    <span>{highlight}</span>
-                  </li>
-                ))}
-              </ul>
+              <div data-reveal={flip ? "left" : "right"}>
+                <span className="chip">{item.period}</span>
+                <h2 className="mt-5 text-3xl font-extrabold text-ink sm:text-4xl">{item.role}</h2>
+                <p className="mt-2 font-semibold text-indigo-600 dark:text-indigo-300">{item.company}</p>
+                <p className="mt-5 leading-8 text-muted">{item.summary}</p>
+                <ul className="mt-6 space-y-3">
+                  {item.highlights.map((h) => (
+                    <li key={h} className="flex gap-3 text-sm leading-7 text-ink">
+                      <span className="mt-1 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-indigo-500 to-fuchsia-500 text-white">
+                        <Check className="h-3 w-3" />
+                      </span>
+                      {h}
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </article>
-          ))}
+          );
+        })}
+      </section>
+
+      <section className="relative overflow-hidden border-y border-line bg-surface py-24">
+        <Aurora className="opacity-50" />
+        <div className="wrap relative">
+          <SectionHeading center eyebrow="Leadership" title="The people accountable for your project." />
+          <div className="mt-16 grid gap-6 lg:grid-cols-3">
+            {founders.map((f, i) => (
+              <div key={f.name} className={i === 1 ? "lg:mt-16" : i === 2 ? "lg:mt-32" : ""}>
+                <FounderCard founder={f} index={i} />
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
-      <section className="mx-auto max-w-6xl px-6 pb-20 md:px-8">
-        <SectionTitle eyebrow="Sample projects" title="Representative engagements with measurable scope." />
-        <p className="mt-5 max-w-2xl text-base leading-7 text-slate-400">
-          Each card links to a full write-up: problem, approach, stack, and outcomes—aligned with the roles above.
-        </p>
-        <div className="mt-10 grid gap-6 lg:grid-cols-2">
-          {projects.map((project) => (
+      <section className="wrap py-24">
+        <div className="flex flex-wrap items-end justify-between gap-6">
+          <SectionHeading eyebrow="Case studies" title="Representative engagements." />
+          <div className="flex gap-3">
+            <Link href="/projects" className="btn-primary">
+              Software work
+            </Link>
+            <Link href="/architecture" className="btn-warm">
+              Architecture
+            </Link>
+          </div>
+        </div>
+        <div className="mt-12 grid gap-5 md:grid-cols-2">
+          {projects.map((p, i) => (
             <Link
-              key={project.slug}
-              href={`/projects/${project.slug}`}
-              className="group flex flex-col rounded-[2rem] border border-white/10 bg-gradient-to-br from-white/[0.07] to-white/[0.02] p-8 shadow-[0_14px_50px_rgba(15,23,42,0.2)] backdrop-blur-xl transition duration-300 hover:-translate-y-1 hover:border-cyan-300/25 hover:shadow-[0_24px_60px_rgba(14,165,233,0.12)]"
+              key={p.slug}
+              href={`/projects/${p.slug}`}
+              data-reveal="up"
+              style={{ "--d": `${(i % 2) * 120}ms` } as React.CSSProperties}
+              className="card glow-border group flex items-start justify-between gap-6 p-7 transition hover:-translate-y-1 hover:shadow-lift"
             >
-              <p className="text-xs font-medium uppercase tracking-[0.2em] text-cyan-200/80">Case study</p>
-              <h3 className="mt-3 text-xl font-semibold tracking-tight text-white group-hover:text-cyan-100">{project.title}</h3>
-              <p className="mt-3 flex-1 text-sm leading-7 text-slate-400">{project.summary}</p>
-              <p className="mt-4 text-xs text-slate-500">{project.stack.join(" · ")}</p>
-              <span className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-cyan-200 transition group-hover:gap-3 group-hover:text-white">
-                View project <ArrowRight className="h-4 w-4" aria-hidden />
-              </span>
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-faint">{p.stack.join(" · ")}</p>
+                <h3 className="mt-3 text-xl font-extrabold text-ink">{p.title}</h3>
+                <p className="mt-3 line-clamp-2 text-sm leading-6 text-muted">{p.summary}</p>
+              </div>
+              <ArrowRight className="mt-1 h-5 w-5 shrink-0 text-indigo-500 transition group-hover:translate-x-1" />
             </Link>
           ))}
         </div>
-        <div className="mt-10 text-center">
-          <Link
-            href="/projects"
-            className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/6 px-6 py-3 text-sm font-medium text-white transition hover:bg-white/10"
-          >
-            All projects <ArrowRight className="h-4 w-4" />
-          </Link>
-        </div>
       </section>
-      <Footer />
     </PageShell>
   );
 }

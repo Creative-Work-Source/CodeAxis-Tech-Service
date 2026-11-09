@@ -1,12 +1,12 @@
+import { Footer } from "@/components/footer";
 import { SiteHeader } from "@/components/site-header";
-import { AnimatedBackground } from "@/components/animated-background";
 
 export function PageShell({ children }: { children: React.ReactNode }) {
   return (
-    <main className="relative min-h-screen overflow-hidden text-slate-100">
-      <AnimatedBackground />
+    <div className="relative flex min-h-screen flex-col overflow-x-clip">
       <SiteHeader />
-      {children}
-    </main>
+      <main className="flex-1">{children}</main>
+      <Footer />
+    </div>
   );
 }

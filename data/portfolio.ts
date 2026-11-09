@@ -1,26 +1,97 @@
 export const siteInfo = {
-  name: "Mykhailo Pyvovarov",
-  role: "Full-Stack Engineer",
-  email: "pyvovarovmykhailo@gmail.com",
-  linkedin: "https://www.linkedin.com/in/mykhailo-pyvovarov-9b824a3b6",
-  github: "https://github.com/Creative-Work-Source",
-  telegram: "https://t.me/s_techguy_2142",
-  telegramHandle: "@s_techguy_2142",
+  name: "CodeAxis",
+  tagline: "Software, Architecture & Engineering Services",
+  description:
+    "CodeAxis is a technology and engineering services company. We build high-performance software platforms and deliver architecture, BIM and civil engineering for ambitious clients.",
 } as const;
 
-export const socialLinks = [
-  { label: "GitHub", href: siteInfo.github, icon: "github" as const },
-  { label: "LinkedIn", href: siteInfo.linkedin, icon: "linkedin" as const },
-  { label: "Email", href: `mailto:${siteInfo.email}`, icon: "mail" as const },
-  { label: "Telegram", href: siteInfo.telegram, icon: "telegram" as const },
+export type Founder = {
+  name: string;
+  title: string;
+  focus: string;
+  bio: string;
+  expertise: string[];
+  photo?: string;
+  href?: string;
+};
+
+export const founders: Founder[] = [
+  {
+    name: "Faizan Zafar",
+    title: "Co-founder",
+    focus: "Software & Technology",
+    bio: "Faizan co-founded CodeAxis to give product teams one engineering partner that owns delivery end to end, from system architecture and build to launch and scale. He leads the software practice and client partnerships, and keeps every engagement tied to measurable business outcomes.",
+    expertise: ["Product engineering", "AI & automation", "Cloud platforms", "Client partnerships"],
+  },
+  {
+    name: "David Nguyen",
+    title: "Co-founder",
+    focus: "Architecture, BIM & Civil Engineering",
+    bio: "David leads the CodeAxis architecture and engineering practice. He brings architectural design, BIM engineering and civil engineering together in one team, taking residential, mixed-use and commercial projects from concept and permit drawings through coordinated BIM models to construction documentation.",
+    expertise: ["Architectural design", "BIM engineering", "Civil engineering", "Construction documentation"],
+  },
+  {
+    name: "Agustin W. Salas",
+    title: "Co-founder",
+    focus: "Design Architecture & Master Planning",
+    bio: "Agustin is a Venezuelan-American architect and master planner with 22 years of experience and 375+ projects designed, including high-rise towers and mixed-use districts in Miami and abroad as Lead Project Designer at Stantec. He leads design at CodeAxis, bringing bioclimatic, wellbeing-led and computational design to every building.",
+    expertise: ["High-rise & mixed-use", "Master planning", "Bioclimatic design", "Parametric design"],
+    photo: "/agustin/profile.jpg",
+    href: "/portfolio/agustin-salas",
+  },
+];
+
+/** Live sites from previous client and service engagements. */
+export const clientLinks = [
+  "https://www.bitvavo.com",
+  "https://www.reya.xyz",
+  "https://www.bentley.com",
+  "https://www.worcester-bosch.co.uk",
+  "https://www.mccann.com",
+  "https://www.on.com/en-gb",
+  "https://www.onbuy.com/gb",
+  "https://www.twitch.tv/",
+  "https://www.netflix.com/",
+  "https://www.bbc.com/",
+  "https://localhomesmarket.com",
+  "https://Kiteworks.com",
+  "https://imgprep.com",
+  "https://insolebuddy.com",
+  "https://ppt-auto-fill-generator-1.onrender.com",
+];
+
+/** Brands shown in the "trusted by" strip on the home page. */
+export const featuredClients = [
+  { name: "Bitvavo", href: "https://www.bitvavo.com", sector: "Crypto exchange" },
+  { name: "Reya", href: "https://www.reya.xyz", sector: "DeFi network" },
+  { name: "Bentley", href: "https://www.bentley.com", sector: "Automotive" },
+  { name: "Worcester Bosch", href: "https://www.worcester-bosch.co.uk", sector: "Home energy" },
+  { name: "McCann", href: "https://www.mccann.com", sector: "Advertising" },
+  { name: "On", href: "https://www.on.com/en-gb", sector: "Sportswear" },
+  { name: "OnBuy", href: "https://www.onbuy.com/gb", sector: "Marketplace" },
+];
+
+export function toLinkLabel(href: string) {
+  try {
+    return new URL(href).hostname.replace(/^www\./, "").toLowerCase();
+  } catch {
+    return href;
+  }
+}
+
+export const stats = [
+  { value: "10+", label: "Years of delivery experience" },
+  { value: `${clientLinks.length}+`, label: "Live software platforms delivered" },
+  { value: "22", label: "Projects in our architecture portfolios" },
+  { value: "3", label: "Co-founders, one accountable team" },
 ];
 
 export const credibilityItems = [
   "10+ years building production software",
-  "Scalable SaaS and full-stack applications",
+  "Scalable SaaS and enterprise platforms",
   "AI automation and workflow systems",
-  "Experience across startups and enterprise products",
-  "Performance, clean architecture, and real-world impact",
+  "Architecture, BIM and civil engineering in-house",
+  "Performance, clean architecture, measurable impact",
 ];
 
 export type Project = {
@@ -48,7 +119,7 @@ export const projects: Project[] = [
     impact:
       "Listing creation time down 50%+; accuracy up 40%+; 90%+ image-based product match accuracy and 95%+ voice command recognition, with a path to broader marketplace automation.",
     role:
-      "Full-stack and AI integration work across the listing flow: React client experience, Python services, OpenAI for image/voice/text processing, and MySQL-backed catalog scale (560M+ product entries).",
+      "Full-stack and AI integration across the listing flow: React client experience, Python services, OpenAI for image/voice/text processing, and MySQL-backed catalog scale (560M+ product entries).",
     description: "",
     problem:
       "The Home Show needed to simplify and speed up creating product listings on its marketplace. Sellers faced tedious manual data entry, uncertain pricing, and long forms. The product needed a smarter, faster way to generate listings with minimal effort.",
@@ -119,19 +190,46 @@ export const projects: Project[] = [
 export const services = [
   {
     title: "AI & Automation",
+    summary: "Put LLMs and agents to work where they remove real manual effort.",
     items: ["LLM integrations", "AI agents", "Workflow automation", "Internal tools"],
   },
   {
-    title: "Full-Stack Apps",
-    items: ["SaaS platforms", "Dashboards", "Web products", "API integrations"],
+    title: "Product Engineering",
+    summary: "Web and mobile products built to launch fast and stay fast.",
+    items: ["SaaS platforms", "Dashboards", "Web & mobile apps", "API integrations"],
   },
   {
     title: "Backend & Architecture",
+    summary: "Systems designed for throughput, reliability and change.",
     items: ["Scalable APIs", "Microservices", "Event-driven systems", "Data pipelines"],
   },
   {
-    title: "Cloud & Delivery",
+    title: "Cloud & DevOps",
+    summary: "Predictable releases and infrastructure that scales with demand.",
     items: ["AWS / GCP", "Docker", "Kubernetes", "CI/CD pipelines"],
+  },
+];
+
+export const processSteps = [
+  {
+    step: "01",
+    title: "Discover",
+    text: "We map goals, users and constraints with your team, then agree a scoped roadmap with clear milestones.",
+  },
+  {
+    step: "02",
+    title: "Architect",
+    text: "We choose the stack and design the system for performance, security and the scale you expect next year.",
+  },
+  {
+    step: "03",
+    title: "Build",
+    text: "Senior engineers ship in short iterations with code review, automated tests and a working demo every sprint.",
+  },
+  {
+    step: "04",
+    title: "Launch & scale",
+    text: "We deploy, monitor and tune in production, and stay on as your engineering partner as the product grows.",
   },
 ];
 
@@ -142,6 +240,8 @@ export const stackGroups = [
   { title: "AI", items: ["OpenAI APIs", "Anthropic APIs", "LangChain", "Prompt engineering"] },
   { title: "Data", items: ["PostgreSQL", "MongoDB", "Redis", "Kafka", "BigQuery"] },
   { title: "Cloud / DevOps", items: ["AWS", "GCP", "Docker", "Kubernetes", "Terraform", "CI/CD"] },
+  { title: "Architecture & BIM", items: ["Revit", "AutoCAD", "Navisworks", "SketchUp", "Enscape"] },
+  { title: "Civil & Visualisation", items: ["Civil 3D", "3ds Max", "Lumion", "V-Ray"] },
 ];
 
 export type ExperienceItem = {
@@ -153,33 +253,47 @@ export type ExperienceItem = {
 };
 
 export const experiencePageIntro =
-  "I work with product leaders and founders to ship dependable software: from AI-assisted marketplaces and mobile safety products to SEO-led growth and regulated fintech-style workflows. Below is how I typically engage, followed by representative engagements you can open as full case studies.";
+  "CodeAxis runs two practices under one roof. Our software practice ships dependable platforms: AI-assisted marketplaces, mobile safety products, fintech-grade workflows and high-traffic consumer sites. Our architecture and engineering practice designs buildings and delivers the BIM and civil engineering to build them. Below is how we engage, followed by representative case studies.";
 
 export const experienceItems: ExperienceItem[] = [
   {
-    role: "Senior Full-Stack / AI Engineer",
-    company: "Product teams, startups, and client engagements",
+    role: "Product & Platform Engineering",
+    company: "Startups, scale-ups and enterprise brands",
     period: "2021 — present",
     summary:
-      "Lead end-to-end delivery on modern stacks—shipping SaaS capabilities, integrating LLM and computer-vision services, and keeping architecture pragmatic as requirements evolve.",
+      "End-to-end delivery on modern stacks: shipping SaaS capabilities, integrating LLM and computer-vision services, and keeping architecture pragmatic as requirements evolve.",
     highlights: [
-      "Design and build scalable frontends (React, Next.js) and services (Node.js, Python) with clear boundaries, observability, and performance budgets.",
-      "Ship AI-assisted workflows—listing automation, deal matching, NLP/Vision—where automation directly reduces manual effort and error rates.",
-      "Partner with product and stakeholders on scope, milestones, and risk; comfortable as a technical counterpart in agile, cross-functional teams.",
-      "Operate cloud-native deployments on AWS/GCP, containerized workloads, and CI/CD so releases stay predictable at increasing scale.",
+      "Scalable frontends (React, Next.js) and services (Node.js, Python) with clear boundaries, observability and performance budgets.",
+      "AI-assisted workflows such as listing automation, deal matching and NLP/vision, where automation directly reduces manual effort and error rates.",
+      "A dedicated delivery lead on every engagement, working with your product owners on scope, milestones and risk.",
+      "Cloud-native deployments on AWS/GCP, containerised workloads and CI/CD so releases stay predictable at increasing scale.",
     ],
   },
   {
-    role: "Full-Stack Developer",
-    company: "SaaS, eCommerce, and internal platform teams",
+    role: "Architecture, BIM & Civil Engineering",
+    company: "Developers, investors, builders and homeowners",
+    period: "Led by David Nguyen & Agustin Salas",
+    summary:
+      "Building design and engineering from first sketch to construction set, for residential towers, mixed-use schemes, private homes and interiors.",
+    highlights: [
+      "Design architecture and master planning for high-rise, mixed-use and hospitality projects, led by Agustin Salas.",
+      "Architectural design from massing and façade studies through planning and permit drawings.",
+      "BIM engineering in Revit with coordinated models, clash detection and quantity take-offs across trades.",
+      "Civil and site engineering: site layout, grading, drainage, utilities and structural coordination.",
+      "Photoreal visualisation, 3D floor plans and virtual staging for sales, investors and approvals.",
+    ],
+  },
+  {
+    role: "Web, eCommerce & Growth Engineering",
+    company: "SaaS, eCommerce and internal platform teams",
     period: "2016 — 2021",
     summary:
-      "Delivered customer-facing web applications, operational dashboards, and integrations in fast-moving product environments.",
+      "Customer-facing web applications, operational dashboards and integrations delivered in fast-moving product environments.",
     highlights: [
-      "Built responsive UIs, REST APIs, and relational data models (PostgreSQL, MySQL) with maintainability and onboarding in mind.",
-      "Collaborated with designers and PMs to turn roadmaps into incremental releases tied to measurable outcomes.",
-      "Contributed to performance work, automated testing, and code review as engineering groups grew.",
-      "Supported growth and marketing initiatives—including technical SEO partnerships—where engineering needed to align with acquisition goals.",
+      "Responsive UIs, REST APIs and relational data models (PostgreSQL, MySQL) built for maintainability and fast onboarding.",
+      "Roadmaps turned into incremental releases tied to measurable outcomes, together with client designers and PMs.",
+      "Performance work, automated testing and code review as standard practice.",
+      "Technical SEO and growth engineering where acquisition goals depend on the platform.",
     ],
   },
 ];

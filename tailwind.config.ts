@@ -1,44 +1,48 @@
 import type { Config } from "tailwindcss";
 
+const token = (name: string) => `rgb(var(--${name}) / <alpha-value>)`;
+
 const config: Config = {
-  content: [
-    "./pages/**/*.{js,ts,jsx,tsx,mdx}",
-    "./components/**/*.{js,ts,jsx,tsx,mdx}",
-    "./app/**/*.{js,ts,jsx,tsx,mdx}",
-  ],
+  darkMode: "class",
+  content: ["./components/**/*.{js,ts,jsx,tsx,mdx}", "./app/**/*.{js,ts,jsx,tsx,mdx}", "./data/**/*.ts"],
   theme: {
     extend: {
       colors: {
-        brand: {
-          50: "#eff8ff",
-          100: "#dbeffe",
-          200: "#bfe6fe",
-          300: "#93d7fd",
-          400: "#5ac0fa",
-          500: "#30a8f2",
-          600: "#1b89d0",
-          700: "#176da9",
-          800: "#185c8c",
-          900: "#194d74"
-        }
+        canvas: token("canvas"),
+        surface: token("surface"),
+        "surface-2": token("surface-2"),
+        ink: token("ink"),
+        muted: token("muted"),
+        faint: token("faint"),
+        line: token("line"),
+      },
+      fontFamily: {
+        sans: ["var(--font-body)", "Inter", "system-ui", "sans-serif"],
+        display: ["var(--font-display)", "var(--font-body)", "system-ui", "sans-serif"],
+      },
+      maxWidth: {
+        wide: "1600px",
       },
       boxShadow: {
-        glow: "0 12px 50px rgba(34, 211, 238, 0.18)",
-      },
-      animation: {
-        float: "float 12s ease-in-out infinite",
-        "float-slow": "float 18s ease-in-out infinite",
-        shimmer: "shimmer 8s linear infinite",
+        soft: "0 1px 2px rgb(15 23 42 / 0.04), 0 12px 40px -12px rgb(15 23 42 / 0.12)",
+        lift: "0 2px 4px rgb(15 23 42 / 0.04), 0 30px 60px -20px rgb(79 70 229 / 0.35)",
       },
       keyframes: {
-        float: {
-          "0%, 100%": { transform: "translateY(0px) scale(1)" },
-          "50%": { transform: "translateY(-16px) scale(1.04)" },
-        },
-        shimmer: {
-          "0%": { backgroundPosition: "0% 50%" },
-          "100%": { backgroundPosition: "200% 50%" },
-        },
+        marquee: { from: { transform: "translateX(0)" }, to: { transform: "translateX(-50%)" } },
+        "marquee-rev": { from: { transform: "translateX(-50%)" }, to: { transform: "translateX(0)" } },
+        float: { "0%,100%": { transform: "translateY(0)" }, "50%": { transform: "translateY(-14px)" } },
+        "spin-slow": { to: { transform: "rotate(360deg)" } },
+        grow: { from: { transform: "scaleY(0.25)" }, to: { transform: "scaleY(1)" } },
+        progress: { from: { transform: "scaleX(0)" }, to: { transform: "scaleX(1)" } },
+      },
+      animation: {
+        marquee: "marquee 45s linear infinite",
+        "marquee-rev": "marquee-rev 50s linear infinite",
+        float: "float 7s ease-in-out infinite",
+        "float-late": "float 8s ease-in-out -3s infinite",
+        "spin-slow": "spin-slow 24s linear infinite",
+        grow: "grow 2.4s ease-in-out infinite alternate",
+        progress: "progress 6s linear forwards",
       },
     },
   },
